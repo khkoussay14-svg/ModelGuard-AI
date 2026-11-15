@@ -1,0 +1,38 @@
+
+name: ModelGuard AI - Automated Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Python Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download the repository source code
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      # Install Python on the GitHub runner
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      # Install project dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      # Run all automated tests
+      - name: Run tests
+        run: |
+          python -m pytest -v
+
+      # Measure Python code coverage
+      - name: Check code coverage
+        run: |
+          python -m pytest --cov=ml --cov=backend --cov-report=term-missing

@@ -58,3 +58,33 @@ def test_missing_feature(client):
     )
 
     assert response.status_code == 422
+
+def test_compare_endpoint(client):
+    """Verify that the comparison API returns valid model results."""
+
+    # Send an HTTP GET request to the comparison endpoint
+    response = client.get("/compare")
+
+    # Check whether the request was successful
+    assert response.status_code == 200
+
+    # Parse the JSON response into a Python dictionary
+    data = response.json()
+
+    # Verify that the response contains the expected key
+    assert "models" in data
+
+    # Extract the model evaluation results
+    models = data["models"]
+
+    # Verify that exactly three models were evaluated
+    assert len(models) == 3
+
+    # Check all model metrics
+    for model in models:
+        assert "model" in model
+        assert 0.0 <= model["accuracy"] <= 1.0
+        assert 0.0 <= model["precision"] <= 1.0
+        assert 0.0 <= model["recall"] <= 1.0
+        assert 0.0 <= model["f1_score"] <= 1.0
+

@@ -6,6 +6,8 @@ from pydantic import BaseModel, Field
 
 from ml.train_model import load_data, train_model
 from ml.validation import validate_features
+from ml.model_comparison import compare_models 
+
 
 
 # Store the trained model and class names in application state.
@@ -63,3 +65,13 @@ def predict(request: PredictionRequest):
     species = ml_state["names"][prediction]
 
     return {"prediction": str(species)}
+
+@app.get("/compare")
+def compare_ml_models():
+    """Compare the performance of multiple ML models."""
+
+    # Run the model comparison
+    results = compare_models()
+
+    # Return evaluation metrics as JSON
+    return {"models": results}
